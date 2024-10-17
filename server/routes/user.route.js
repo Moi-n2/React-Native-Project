@@ -1,17 +1,17 @@
 import express from "express";
-import upload from "../middleware/multer.js";
 import {
   signUp,
   activateUser,
   login,
   logout,
   getUserInfo,
-  updateUserName,
+  updateUserInfo,
   updatePassword,
   updateAvatar,
   getAllUsers,
   updateUserRole,
   deleteUser,
+  updateUserAddress,
 } from "../controllers/user.controller.js";
 import { authorizeRoles, isAutheticated } from "../middleware/auth.js";
 
@@ -20,16 +20,12 @@ const userRouter = express.Router();
 userRouter.post("/sign-up", signUp);
 userRouter.post("/activate-user", activateUser);
 userRouter.post("/login", login);
-userRouter.get("/logout", logout);
+userRouter.get("/logout", isAutheticated, logout);
 userRouter.get("/me", isAutheticated, getUserInfo);
-userRouter.put("/update-user-name", isAutheticated, updateUserName);
+userRouter.put("/update-user-info", isAutheticated, updateUserInfo);
 userRouter.put("/update-user-password", isAutheticated, updatePassword);
-userRouter.put(
-  "/update-user-avatar",
-  isAutheticated,
-  upload.single("avatar"),
-  updateAvatar
-);
+userRouter.put("/update-user-avatar", isAutheticated, updateAvatar);
+userRouter.post("/update-user-address", isAutheticated, updateUserAddress);
 
 userRouter.get(
   "/get-users",
@@ -44,7 +40,7 @@ userRouter.put(
   updateUserRole
 );
 userRouter.delete(
-  "/delte-user/:id",
+  "/delete-user/:id",
   isAutheticated,
   authorizeRoles("admin"),
   deleteUser

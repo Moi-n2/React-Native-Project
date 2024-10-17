@@ -5,22 +5,35 @@ type onboardingSwiperDataType = {
   image: any;
 };
 
-type Avatar = {
-  public_id: string;
-  url: string;
-};
-
-type User = {
-  _id: string;
-  name: string;
-  email: string;
-  avatar?: Avatar;
-  password?: string;
-  courses: any;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
 type BannerDataTypes = {
   bannerImageUrl: any;
 };
+
+export type cartProp = {
+  _id: string;
+  price: number;
+  size: string;
+  quantity: number;
+  product: productProp;
+};
+
+export type productProp = {
+  name: String;
+  description: String;
+  price: Number;
+  image: Array;
+  category: String;
+  subCategory: String;
+  sizes: Array;
+  bestseller: Boolean;
+};
+
+interface Avatar {
+  public_id: string;
+  url: string;
+}
+
+interface Filter {
+  name: string;
+  options: string[];
+}

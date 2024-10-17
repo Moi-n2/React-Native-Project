@@ -4,6 +4,7 @@ import AppIntroSlider from "react-native-app-intro-slider";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { onboarding } from "@/constants";
 import { Href, router } from "expo-router";
+import { onboardingSwiperDataType } from "@/types/global";
 
 export default function welcome() {
   return (

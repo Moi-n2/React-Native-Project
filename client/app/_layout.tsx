@@ -28,10 +28,16 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     Prata: require("../assets/fonts/Prata-Regular.ttf"),
     OutFitBlack: require("../assets/fonts/Outfit-Black.ttf"),
     OutfitRegular: require("../assets/fonts/Outfit-Regular.ttf"),
+    OutfitBold: require("../assets/fonts/Outfit-Bold.ttf"),
+    OutfitExtraBold: require("../assets/fonts/Outfit-ExtraBold.ttf"),
+    OutfitExtraLight: require("../assets/fonts/Outfit-ExtraLight.ttf"),
+    OutfitLight: require("../assets/fonts/Outfit-Light.ttf"),
+    OutfitMedium: require("../assets/fonts/Outfit-Medium.ttf"),
+    OutfitSemiBold: require("../assets/fonts/Outfit-SemiBold.ttf"),
+    OutfitThin: require("../assets/fonts/Outfit-Thin.ttf"),
     ...FontAwesome.font,
   });
 
@@ -58,26 +64,8 @@ function RootLayoutNav() {
     <ToastProvider>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
-        <Stack.Screen name="(routes)/welcome" />
-        <Stack.Screen name="(routes)/login" />
-        <Stack.Screen name="(routes)/sign-up" />
-        <Stack.Screen name="(routes)/forgot-password" />
-        <Stack.Screen
-          name="(routes)/verify-account"
-          options={() => ({
-            title: "",
-            headerLeft: () => (
-              <Pressable
-                onPress={() => router.back()}
-                className="flex-row justify-between items-center text-center "
-              >
-                <Ionicons name="chevron-back" size={22} color="black" />
-                <Text className="text-lg self-end">Back</Text>
-              </Pressable>
-            ),
-            headerShown: true,
-          })}
-        />
+        <Stack.Screen name="(routes)" />
+        <Stack.Screen name="(tabs)" />
       </Stack>
     </ToastProvider>
   );

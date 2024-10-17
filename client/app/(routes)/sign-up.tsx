@@ -14,22 +14,23 @@ import { images } from "@/constants";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import Feather from "@expo/vector-icons/Feather";
 import { Href, router } from "expo-router";
-import http from "@/utils/http";
+import http, { ApiResponse } from "@/utils/http";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Toast } from "react-native-toast-notifications";
-import axios from "axios";
 
 type SignupForm = {
   email: string;
   password: string;
-  name: string;
+  firstName: string;
+  lastName: string;
 };
 
 export default function signUp() {
   const [signupForm, setSignupForm] = useState<SignupForm>({
     email: "",
     password: "",
-    name: "",
+    firstName: "",
+    lastName: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [buttonSpinner, setButtonSpinner] = useState(false);
@@ -38,7 +39,7 @@ export default function signUp() {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
     const isInvalid = (
-      ["name", "email", "password"] as Array<keyof SignupForm>
+      ["firstName", "lastName", "email", "password"] as Array<keyof SignupForm>
     ).some((item) => {
       if (!signupForm[item]) {
         Toast.show(`Please enter ${item}`, {
@@ -55,7 +56,6 @@ export default function signUp() {
       Toast.show(`Invalid email address`, {
         type: "warning",
       });
-      console.log(signupForm);
 
       return false;
     }
@@ -78,15 +78,16 @@ export default function signUp() {
     if (!test) return;
     setButtonSpinner(true);
     try {
-      const res = await http.post("/sign-up", signupForm);
-      if (res.data.success) {
+      const res: ApiResponse = await http.post("/sign-up", signupForm);
+      if (res.success) {
         await AsyncStorage.setItem(
           "activation_token",
           res.data.activationToken
         );
-        Toast.show(res.data.message, { type: "success" });
+        Toast.show(res.message, { type: "success" });
         setSignupForm({
-          name: "",
+          firstName: "",
+          lastName: "",
           email: "",
           password: "",
         });
@@ -94,8 +95,6 @@ export default function signUp() {
         router.push("/(routes)/verify-account" as Href);
       }
     } catch (error) {
-      console.log(error);
-
       setButtonSpinner(false);
       Toast.show(error as string, {
         type: "danger",
@@ -115,21 +114,31 @@ export default function signUp() {
         </Text>
         <Text className="text-base">Create an account to join in 👋</Text>
         <View className="mt-10 space-y-5">
-          <View className="flex-row justify-start items-center bg-gray-100 rounded-lg border border-gray-600 focus:border-red-400 px-3 focus:bg-rose-100">
-            <Feather name="user" size={20} color="black" />
-            <TextInput
-              className={`rounded-full px-5 py-3 font-JakartaSemiBold text-[15px] flex-1 text-left`}
-              placeholder="Enter name"
-              value={signupForm.name}
-              onChangeText={(val) =>
-                setSignupForm({ ...signupForm, name: val })
-              }
-            />
+          <View className="flex-row justify-between items-center">
+            <View className="flex-row justify-start items-center bg-gray-100 rounded-lg border border-gray-600 focus:border-red-400 px-3 focus:bg-rose-100">
+              <Feather name="user" size={20} color="black" />
+              <TextInput
+                className={`rounded-full px-5 py-3 font-OutfitBold text-[15px] flex-1 text-left`}
+                placeholder="FirstName"
+                value={signupForm.firstName}
+                onChangeText={(val) =>
+                  setSignupForm({ ...signupForm, firstName: val })
+                }
+              />
+              <TextInput
+                className={`rounded-full px-5 py-3 font-OutfitBold text-[15px] flex-1 text-left`}
+                placeholder="LastName"
+                value={signupForm.lastName}
+                onChangeText={(val) =>
+                  setSignupForm({ ...signupForm, lastName: val })
+                }
+              />
+            </View>
           </View>
           <View className="flex-row justify-start items-center bg-gray-100 rounded-lg border border-gray-600 focus:border-red-400 px-3 focus:bg-rose-100">
             <Fontisto name="email" size={20} color="black" />
             <TextInput
-              className={`rounded-full px-5 py-3 font-JakartaSemiBold text-[15px] flex-1 text-left`}
+              className={`rounded-full px-5 py-3 font-OutfitBold text-[15px] flex-1 text-left`}
               placeholder="Enter email"
               value={signupForm.email}
               onChangeText={(val) =>
@@ -140,7 +149,7 @@ export default function signUp() {
           <View className="flex-row justify-start items-center bg-gray-100 rounded-lg border border-gray-600 focus:border-red-400 px-3 focus:bg-rose-100">
             <Fontisto name="locked" size={20} color="black" />
             <TextInput
-              className={`rounded-full px-5 py-3 font-JakartaSemiBold text-[15px] flex-1 text-left`}
+              className={`rounded-full px-5 py-3 font-OutfitBold text-[15px] flex-1 text-left`}
               placeholder="Enter password"
               value={signupForm.password}
               onChangeText={(val) =>
@@ -178,7 +187,7 @@ export default function signUp() {
           </View>
 
           <View className="items-center">
-            <Text className="font-JakartaSemiBold tracking-wider mb-3">
+            <Text className="font-OutfitBold tracking-wider mb-3">
               - OR Continue with -
             </Text>
             <View className="flex-row items-center justify-center space-x-3">

@@ -1,14 +1,46 @@
+import "dotenv/config";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import mongoose, { Schema } from "mongoose";
+import { productSchema } from "./product.model.js";
 
 const emailRegexPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+const orderSchema = new mongoose.Schema(
+  {
+    cart: [
+      {
+        product: {
+          type: productSchema,
+        },
+        quantity: {
+          type: Number,
+          min: 1, // 至少为1
+        },
+        size: {
+          type: String,
+        },
+      },
+    ],
+    status: {
+      type: String,
+    },
+    address: {
+      type: String,
+    },
+  },
+  { timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" } } // 添加时间戳
+);
+
 const userSchema = new mongoose.Schema(
   {
-    name: {
+    firstName: {
       type: String,
-      required: [true, "please enter your name."],
+      required: [true, "please enter your firstName."],
+    },
+    lastName: {
+      type: String,
+      required: [true, "please enter your lastName."],
     },
     email: {
       type: String,
@@ -23,7 +55,7 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      minlength: [6, "password must be as least 6 characters"],
+      minlength: [6, "password must be as least 8 characters"],
       select: false,
     },
     avatar: {
@@ -49,6 +81,53 @@ const userSchema = new mongoose.Schema(
         },
       ],
     },
+    cart: {
+      type: [
+        {
+          product: {
+            type: productSchema,
+          },
+          quantity: {
+            // 添加数量字段
+            type: Number,
+            min: 1, // 至少为1
+          },
+          size: {
+            // 添加尺码字段
+            type: String,
+          },
+        },
+      ],
+      default: [], // 默认值为空数组
+    },
+
+    address: {
+      type: [
+        {
+          firstName: String,
+          lastName: String,
+          phone: String,
+          street: String,
+          city: String,
+          state: String,
+          country: String,
+          zipCode: String,
+          isDefault: {
+            type: Boolean,
+            default: false,
+          },
+        },
+      ],
+      default: [],
+    },
+
+    orders: {
+      type: [orderSchema],
+      default: [],
+    },
+
+    access_token: String,
+    refresh_token: String,
   },
   { timestamps: true }
 );
@@ -61,15 +140,15 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-userSchema.methods.accessToken = function () {
+userSchema.methods.generateAccessToken = function () {
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET || "", {
     expiresIn: "30m",
   });
 };
 
-userSchema.methods.freshToken = function () {
+userSchema.methods.generateRefreshToken = function () {
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET || "", {
-    expiresIn: "15d",
+    expiresIn: "7d",
   });
 };
 

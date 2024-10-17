@@ -9,7 +9,7 @@ import {
 import React, { useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Toast } from "react-native-toast-notifications";
-import http from "@/utils/http";
+import http, { ApiResponse } from "@/utils/http";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 
@@ -29,11 +29,11 @@ export default function verifyAccount() {
     try {
       const activation_token = await AsyncStorage.getItem("activation_token");
       const activation_code = code.join("");
-      const res = await http.post("/activate-user", {
+      const res: ApiResponse = await http.post("/activate-user", {
         activation_token,
         activation_code,
       });
-      if (res.data.success) {
+      if (res.success) {
         Toast.show("Your account activated successfully!"),
           {
             type: "success",

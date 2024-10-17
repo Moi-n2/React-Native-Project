@@ -4,6 +4,9 @@ import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
 import ErrorMiddleWare from "./middleware/error.js";
 import userRouter from "./routes/user.route.js";
+import productRouter from "./routes/product.route.js";
+import cartRouter from "./routes/cart.route.js";
+import orderRouter from "./routes/order.route.js";
 
 const app = express();
 
@@ -14,6 +17,9 @@ app.use(cookieParser());
 app.use(cors());
 
 app.use("/api/v1", userRouter);
+app.use("/api/v1/product", productRouter);
+app.use("/api/v1/cart", cartRouter);
+app.use("/api/v1/order", orderRouter);
 
 app.all("*", (req, res, next) => {
   const err = new Error(`Route ${req.originalUrl} not found`);

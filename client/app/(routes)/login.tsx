@@ -14,11 +14,13 @@ import { images } from "@/constants";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import Feather from "@expo/vector-icons/Feather";
 import { Href, router } from "expo-router";
-import http from "@/utils/http";
+import http, { ApiResponse } from "@/utils/http";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Toast } from "react-native-toast-notifications";
+import useStore from "@/utils/store";
 
 export default function login() {
+  const { setUser } = useStore();
   const [loginform, setLoginform] = useState({
     email: "",
     password: "",
@@ -31,14 +33,14 @@ export default function login() {
       return Toast.show("Please fill email and password", { type: "warning" });
     }
     try {
-      const res = await http.post("/login", loginform);
-      if (res.data.success) {
-        await AsyncStorage.setItem("access_token", res.data.accessToken);
-        await AsyncStorage.setItem("fresh_token", res.data.freshToken);
-        router.push("/(tabs)");
+      const res: ApiResponse = await http.post("/login", loginform);
+
+      if (res.success) {
+        const user = res.data;
+        setUser(user);
+        router.push("/(tabs)/home");
       }
     } catch (error) {
-      console.log(error);
       Toast.show(error as string, { type: "danger" });
     }
   };

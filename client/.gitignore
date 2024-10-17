@@ -3,6 +3,7 @@
 # dependencies
 node_modules/
 .env
+constants/env.ts
 
 # Expo
 .expo/
