@@ -100,10 +100,18 @@ export const placeOrderStripe = async (req, res) => {
       },
       quantity: 1,
     });
+    // 获取协议（http 或 https）
+    const protocol = req.protocol;
+
+    // 获取主机名（包括端口）
+    const host = req.get("host");
+
+    // 组合成完整的 URL
+    const fullUrl = `${protocol}://${host}`;
 
     const session = await stripe.checkout.sessions.create({
-      success_url: `${origin}/verify?success=true`,
-      cancel_url: `${origin}/verify?success=false`,
+      success_url: `${fullUrl}/verify?success=true`,
+      cancel_url: `${fullUrl}/verify?success=false`,
       line_items,
       mode: "payment",
     });
