@@ -82,6 +82,7 @@ export default function home() {
 
           <View className="w-full h-[250px] -mt-5">
             <Swiper
+              autoplay
               showsButtons={false}
               dot={
                 <View className="w-[32px] h-[4px] mx-1 rounded-full bg-white" />

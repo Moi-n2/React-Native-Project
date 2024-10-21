@@ -49,7 +49,7 @@ export default function cart() {
     );
     if (defaultAddress) {
       const addressString = Object.entries(defaultAddress)
-        .filter(([key]) => key !== "_id") // 过滤掉 _id
+        .filter(([key]) => key !== "_id" && key !== "isDefault") // 过滤掉 _id
         .map(([, value]) => value) // 仅获取值
         .join(" ");
       setAddress(addressString);

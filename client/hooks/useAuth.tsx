@@ -29,10 +29,7 @@ export interface User {
 }
 
 export default function useAuth() {
-  // const [loading, setLoading] = useState<boolean>(false);
   const { setLoading, setUser } = useStore();
-  // const [user, setUser] = useState<User | null>(null);
-  // const [error, setError] = useState<string>("");
 
   const fetchUserInfo = async () => {
     try {
