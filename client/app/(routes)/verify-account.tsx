@@ -34,11 +34,10 @@ export default function verifyAccount() {
         activation_code,
       });
       if (res.success) {
-        Toast.show("Your account activated successfully!"),
-          {
-            type: "success",
-          };
-        setCode(["", "", "", ""]);
+        Toast.show("Your account activated successfully!", {
+          type: "success",
+        }),
+          setCode(["", "", "", ""]);
         router.push("/(routes)/login");
       }
     } catch (error) {
